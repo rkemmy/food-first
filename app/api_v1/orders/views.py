@@ -43,19 +43,27 @@ class GetOneOrder(Resource):
         return {"Orders": order.serialize()},200
         
 
-    def put(self, id):
-        data = request.get_json(force=True)
-        for datas in orders:
-            if id == datas['id']:
-                datas['description'] = data['description'] 
-                datas['price'] = data['price']
-                return datas, 200 
+    # def put(self, id):
+    #     data = request.get_json(force=True)
+    #     for datas in orders:
+    #         if id == datas['id']:
+    #             datas['description'] = data['description'] 
+    #             datas['price'] = data['price']
+    #             return datas, 200 
         
-        datas = {
-            "id" : id,
-            "description" : data['description'],
-            "price" : data['price']
-        }
+    #     datas = {
+    #         "id" : id,
+    #         "description" : data['description'],
+    #         "price" : data['price']
+    #     }
 
-        orders.append(datas)
-        return datas, 201
+    #     orders.append(datas)
+    #     return datas, 201
+
+    def delete(self, id):
+        order  = Order().get_by_id(id)
+        if not order:
+            return {"Message":"Order not found"},400
+
+        orders.remove(order)
+        return {"message":"order deleted successful"}, 200
