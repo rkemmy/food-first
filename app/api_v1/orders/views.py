@@ -31,3 +31,13 @@ class Orders(Resource):
             "Message": "Order created",
             "order":new_order.serialize()
             }, 200
+
+class GetOneOrder(Resource):
+    
+    def get(self, id):
+        
+        order  = Order().get_by_id(id)
+        if not order:
+            return {"Message":"Order not found"},400
+
+        return {"Orders": order.serialize()},200
