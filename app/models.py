@@ -11,6 +11,13 @@ class Order:
 
         Order.order_id += 1
 
+
+    def get_by_id(self, id):
+        for order in orders:
+            if order.id == id:
+                return order
+                
+
     def serialize(self):
         return dict (
             id = self.id,
