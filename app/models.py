@@ -10,3 +10,12 @@ class Order:
         self.status = status
 
         Order.order_id += 1
+
+    def serialize(self):
+        return dict (
+            id = self.id,
+            name = self.name,
+            description = self.description,
+            price=self.price,
+            status=self.status
+        )
