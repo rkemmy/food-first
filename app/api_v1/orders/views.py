@@ -10,3 +10,21 @@ class Orders(Resource):
             return {"message":"empty list"}, 404
         else:
             return {"Orders": [order.serialize() for order in orders]}, 200
+
+    def post(self):
+        data = request.get_json(force=True)
+        if not data:
+            return ({'message': 'No input data provided'}, 400)
+
+        name = data['name']
+        description = data['description']
+        price = data['price'] 
+        
+        new_order = Order(name, description, price)
+        
+        orders.append(new_order)
+
+        return {
+            "Message": "Order created",
+            "order":new_order.serialize()
+            }, 200
