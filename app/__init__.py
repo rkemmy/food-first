@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_restful import Api
-from app.api_v1.orders.views import Orders
+from app.api_v1.orders.views import Orders, GetOneOrder
 from instance.config import app_config
 
 
@@ -16,6 +16,7 @@ def create_app(config_stage):
     app.register_blueprint(orders_blueprint, url_prefix='/api/v1')
 
     api.add_resource(Orders, '/orders')
+    api.add_resource(GetOneOrder, '/orders/<int:id>')
     
 
 
