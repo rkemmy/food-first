@@ -41,3 +41,21 @@ class GetOneOrder(Resource):
             return {"Message":"Order not found"},400
 
         return {"Orders": order.serialize()},200
+        
+
+    def put(self, id):
+        data = request.get_json(force=True)
+        for datas in orders:
+            if id == datas['id']:
+                datas['description'] = data['description'] 
+                datas['price'] = data['price']
+                return datas, 200 
+        
+        datas = {
+            "id" : id,
+            "description" : data['description'],
+            "price" : data['price']
+        }
+
+        orders.append(datas)
+        return datas, 201
