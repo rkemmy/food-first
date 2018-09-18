@@ -21,6 +21,9 @@ class Orders(Resource):
         price = data['price'] 
         
         new_order = Order(name, description, price)
+
+        # if name in orders:
+        #     return {'message': 'Order already exists'}
         
         orders.append(new_order)
 
