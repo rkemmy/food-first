@@ -17,6 +17,8 @@ class Order:
             if order.id == id:
                 return order
                 
+    def get_all(self):
+        return orders
 
     def serialize(self):
         return dict (
