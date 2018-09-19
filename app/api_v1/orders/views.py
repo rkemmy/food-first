@@ -22,8 +22,8 @@ class Orders(Resource):
         
         new_order = Order(name, description, price)
 
-        # if name in orders:
-        #     return {'message': 'Order already exists'}
+        if name in orders:
+            return {'message': 'Order already exists'}
         
         orders.append(new_order)
 
@@ -34,8 +34,9 @@ class Orders(Resource):
 
     # def delete(self):
     #     all_orders = Order.get_all()
-    #     if orders.remove(all_orders):
-    #         return {'message': 'all orders deleted'}       
+    #     return all_orders
+    #      if orders.remove(all_orders):
+    #          return {'message': 'all orders deleted'}       
 
 
 class GetOneOrder(Resource):
@@ -49,7 +50,26 @@ class GetOneOrder(Resource):
         return {"Orders": order.serialize()},200
         
 
-    
+    def put(self, id):
+        data = request.get_json(force=True)
+        for item in orders:
+            if id == item['id']:
+                item['name'] = data['name']
+                item['description'] = data['description'] 
+                item['price'] = data['price']
+                item['status'] = data['status']
+                return item, 200 
+        
+        item = {
+            "id" : id,
+            "name": data["name"],
+            "description" : data["description"],
+            "price" : data["price"],
+            "status" : data["status"]
+        }
+
+        orders.append(item)
+        return item, 201
 
 
     def delete(self, id):
