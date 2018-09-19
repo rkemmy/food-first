@@ -8,7 +8,7 @@ install:
   - pip install coveralls
 
 script:
-  - nosetests --with-coverage --cover-package=app
+  - coverage run --source app/tests/v1 -m pytest -v
 
 after_success:
   - coveralls
