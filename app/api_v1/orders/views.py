@@ -32,6 +32,12 @@ class Orders(Resource):
             "order":new_order.serialize()
             }, 200
 
+    # def delete(self):
+    #     all_orders = Order.get_all()
+    #     if orders.remove(all_orders):
+    #         return {'message': 'all orders deleted'}       
+
+
 class GetOneOrder(Resource):
     
     def get(self, id):
@@ -43,22 +49,8 @@ class GetOneOrder(Resource):
         return {"Orders": order.serialize()},200
         
 
-    # def put(self, id):
-    #     data = request.get_json(force=True)
-    #     for datas in orders:
-    #         if id == datas['id']:
-    #             datas['description'] = data['description'] 
-    #             datas['price'] = data['price']
-    #             return datas, 200 
-        
-    #     datas = {
-    #         "id" : id,
-    #         "description" : data['description'],
-    #         "price" : data['price']
-    #     }
+    
 
-    #     orders.append(datas)
-    #     return datas, 201
 
     def delete(self, id):
         order  = Order().get_by_id(id)
