@@ -21,7 +21,7 @@ class TestApi(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_post_orders(self):
-        res = self.client.post('/api/v1/orders', json.dumps(self.new_order), content_type='application/json')
+        res = self.client.post('/api/v1/orders', data = json.dumps(self.new_order), content_type='application/json')
 
         self.assertEqual(res.status_code, 201)
 
