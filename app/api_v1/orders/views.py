@@ -45,7 +45,7 @@ class GetOneOrder(Resource):
         
         order  = Order().get_by_id(id)
         if not order:
-            return {"Message":"Order not found"},400
+            return {"Message":"Order not found"},200
 
         return {"Orders": order.serialize()},200
         
@@ -75,7 +75,7 @@ class GetOneOrder(Resource):
     def delete(self, id):
         order  = Order().get_by_id(id)
         if not order:
-            return {"Message":"Order not found"},400
+            return {"Message":"Order not found"},404
 
         orders.remove(order)
         return {"message":"order deleted successful"}, 200

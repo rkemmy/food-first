@@ -25,7 +25,20 @@ class TestApi(unittest.TestCase):
 
         self.assertEqual(res.status_code, 201)
 
-    
+    def test_delete_order(self):
+        res = self.client.delete('/api/v1/orders/1', content_type='application/json')
+
+        self.assertEqual(res.status_code, 404)
+
+    def test_get_one_order(self):
+        res = self.client.get('/api/v1/orders/1', content_type='application/json')
+
+        self.assertEqual(res.status_code, 200)
+
+    # def test_update_order(self):
+    #     res = self.client.put('.api/v1/orders/1', content_type='application/json')
+
+    #     self.assertEqual(res.status_code, 201)
 
 if __name__ == '__main__':
     unittest.main()
