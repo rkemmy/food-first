@@ -7,7 +7,7 @@ class Orders(Resource):
 
     def get(self):
         if len(orders) == 0:
-            return {"message":"empty list"}, 404
+            return {"message":"empty list"}, 200
         else:
             return {"Orders": [order.serialize() for order in orders]}, 200
 
@@ -30,7 +30,7 @@ class Orders(Resource):
         return {
             "Message": "Order created",
             "order":new_order.serialize()
-            }, 200
+            }, 201
 
     # def delete(self):
     #     all_orders = Order.get_all()
@@ -53,11 +53,11 @@ class GetOneOrder(Resource):
     def put(self, id):
         data = request.get_json(force=True)
         for item in orders:
-            if id == item['id']:
+            if item['id']== id:
                 item['name'] = data['name']
                 item['description'] = data['description'] 
                 item['price'] = data['price']
-                item['status'] = data['status']
+                # item['status'] = data['status']
                 return item, 200 
         
         item = {
@@ -65,7 +65,7 @@ class GetOneOrder(Resource):
             "name": data["name"],
             "description" : data["description"],
             "price" : data["price"],
-            "status" : data["status"]
+            # "status" : data["status"]
         }
 
         orders.append(item)
