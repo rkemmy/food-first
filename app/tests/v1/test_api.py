@@ -13,7 +13,10 @@ class TestApi(unittest.TestCase):
         self.app = create_app("testing")
         self.client = self.app.test_client()
         self.app_context = self.app.app_context()
-        self.new_order = {"name": "eggs", "price": 20, "description": "good", "status": "pending"}
+        self.app_context.push()
+
+    def tearDown(self):
+        self.app_context.pop()
 
     def test_get_orders(self):
         res = self.client.get('/api/v1/orders', content_type='application/json')
@@ -21,24 +24,71 @@ class TestApi(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_post_orders(self):
-        res = self.client.post('/api/v1/orders', data = json.dumps(self.new_order), content_type='application/json')
+        '''test create food item'''
+        create_data = {
+            "name":"ugali",
+            "description":"spicy",
+            "price":50
+        }
+        response = self.client.post(
+            "api/v1/orders",
+            data = json.dumps(create_data),
+            headers = {"content-type":"application/json"}
+        )
+        self.assertEqual(response.status_code,201)
+    # def test_delete_order(self):
+    #     res = self.client.delete('/api/v1/orders/1', content_type='application/json')
 
-        self.assertEqual(res.status_code, 201)
+    def test_get_by_id(self):
+        response = self.client.get(
+            '/api/v1/orders/1',
+            headers = {"content-type":"application/json"}
+        )
 
-    def test_delete_order(self):
-        res = self.client.delete('/api/v1/orders/1', content_type='application/json')
+        self.assertEqual(response.status_code,200)
 
-        self.assertEqual(res.status_code, 404)
+    def test_get_completed_orders(self):
+        response = self.client.get(
+            'api/v1/orders/completed',
+            headers = {"content-type":"application/json"}
+        )
+        self.assertEqual(response.status_code,200)
 
-    def test_get_one_order(self):
-        res = self.client.get('/api/v1/orders/1', content_type='application/json')
 
-        self.assertEqual(res.status_code, 200)
+    def test_get_pending_orders(self):
+        response = self.client.get(
+            'api/v1/orders/pending',
+            headers = {"content-type":"application/json"}
+        )
+        self.assertEqual(response.status_code,200)
 
-    def test_update_order(self):
-        res = self.client.put('/api/v1/orders/1', data = json.dumps(self.new_order), content_type='application/json')
+    def test_complete_order(self):
+        response = self.client.put(
+            'api/v1/orders/completeorder/1',
+            headers = {"content-type":"application/json"}
+        )
+        self.assertEqual(response.status_code,200)
 
-        self.assertEqual(res.status_code, 404)
+    def test_decline_order(self):
+        response = self.client.put(
+            "api/v1/orders/decline/1",
+            headers = {"content-type":"application/json"}
+        )
 
-if __name__ == '__main__':
-    unittest.main()
+        self.assertEqual(response.status_code,200)
+
+    def test_declined_orders(self):
+        response = self.client.get(
+            "api/v1/orders/declined",
+        headers = {"content-type":"application/json"}
+        )
+        self.assertEqual(response.status_code,200)
+
+    def test_get_approved_orders(self):
+        response = self.client.get(
+            "api/v1/orders/approved",
+            headers = {"content-type":"application/json"}
+        )
+
+        self.assertEqual(response.status_code,200)
+
