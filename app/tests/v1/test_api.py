@@ -35,10 +35,10 @@ class TestApi(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
 
-    # def test_update_order(self):
-    #     res = self.client.put('.api/v1/orders/1', content_type='application/json')
+    def test_update_order(self):
+        res = self.client.put('/api/v1/orders/1', data = json.dumps(self.new_order), content_type='application/json')
 
-    #     self.assertEqual(res.status_code, 201)
+        self.assertEqual(res.status_code, 404)
 
 if __name__ == '__main__':
     unittest.main()
