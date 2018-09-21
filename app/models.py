@@ -7,7 +7,7 @@ class Order:
         self.name =  name
         self.description =  description
         self.price = price
-        # self.status = status
+        self.status = status
 
         Order.order_id += 1
 
@@ -26,5 +26,5 @@ class Order:
             "name" : self.name,
             "description" : self.description,
             "price": self.price,
-            # "status" : self.status
+            "status" : self.status
         }
