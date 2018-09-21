@@ -13,12 +13,14 @@ class Order:
 
 
     def get_by_id(self, id):
+        ''' Method that gets a specific order from a list by id '''
         for order in orders:
             if order.id == id:
                 return order
                 
 
     def serialize(self):
+        ''' Method that takes in json data and returns a python dictionary '''
         return {
             "id" : self.id,
             "name" : self.name,
