@@ -75,3 +75,88 @@ class GetOneOrder(Resource):
 
         orders.remove(order)
         return {"message":"order deleted successful"}, 200
+class AcceptOrder(Resource):
+    
+    def put(self,id):
+        order  = Order().get_by_id(id)
+        if order:
+            if order.status !="pending":
+                return {"message":"order has already been {}".format(order.status)}
+            
+            order.status = "approved"
+            return {"message":"keep tight,your order has been approved!!"}
+        
+        return {"message":"uhh,we seem not to find any orders"}
+
+class ApprovedOrders(Resource):
+
+    def get(self):
+        approvedorders = []
+        for order in orders:
+            if order.status == "approved":
+                approvedorders.append(order)
+                return {"message":[order.serialize() for order in approvedorders]},200
+
+        return {"message":"unfortunately there are no approved orders"},200
+
+
+class DeclineOrder(Resource):
+
+    def put(self,id):
+
+        order = Order().get_by_id(id)
+        if order:
+            if order.status != "pending" and order.status == "declined":
+                return {"message":"order already {}".format(order.status)}
+            
+            order.status = "declined"
+            return {"message":"yeah,the order declined successfully"}
+        
+        return {"message":"Damn!Your order was not found"}
+
+class DeclinedOrders(Resource):
+    
+    def get(self):
+
+        declinedorders = []
+        for order in orders:
+            if order.status == "declined":
+                declinedorders.append(order)
+        
+        
+        return {"declined orders":[order.serialize() for order in declinedorders]}
+        
+
+class PendingOrders(Resource):
+    def get(self):
+        pendingorders = []
+        for order in orders:
+            if order.status == "pending":
+                pendingorders.append(order)
+        return {"pending orders":[order.serialize() for order in pendingorders]}
+
+
+class CompleteOrder(Resource):
+    def put(self,id):
+        order = Order().get_by_id(id)
+        if order:
+            if order.status != "approved":
+                return {"message":"The order is already {}".format(order.status)}
+            if order.status == "approved":
+                order.status = "completed"
+                return {"message":"Order has beeen completed and will be delivered"}
+        return {"message":"order not found"}
+class CompletedOrders(Resource):
+    def get(self):
+        completedorders = []
+        for order in orders:
+            if order.status == "completed":
+                completedorders.append(order)
+        return {"completed orders":[order.serialize() for order in completedorders]}
+        
+
+
+
+        
+
+
