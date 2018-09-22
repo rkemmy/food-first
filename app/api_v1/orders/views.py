@@ -29,10 +29,9 @@ class Orders(Resource):
         
         orders.append(new_order)
 
-        return {
-            "Message": "Order created",
-            "order":new_order.serialize()
-            }, 201
+        return {"message":"order successfully created",
+                "order":new_order.serialize()
+                },201
 
     # def delete(self):
     #     all_orders = Order.get_all()
@@ -74,7 +73,7 @@ class GetOneOrder(Resource):
             return {"Message":"Order not found"},404
 
         orders.remove(order)
-        return {"message":"order deleted successful"}, 200
+        return {"message":"order deleted successfully"}, 200
 class AcceptOrder(Resource):
     
     def put(self,id):

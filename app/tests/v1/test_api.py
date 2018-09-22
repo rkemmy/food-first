@@ -22,6 +22,7 @@ class TestApi(unittest.TestCase):
         res = self.client.get('/api/v1/orders', content_type='application/json')
 
         self.assertEqual(res.status_code, 200)
+       
 
     def test_post_orders(self):
         '''test create food item'''
@@ -36,6 +37,7 @@ class TestApi(unittest.TestCase):
             headers = {"content-type":"application/json"}
         )
         self.assertEqual(response.status_code,201)
+        self.assertEqual(json.loads(response.data)['message'], "order successfully created")
     # def test_delete_order(self):
     #     res = self.client.delete('/api/v1/orders/1', content_type='application/json')
 
@@ -68,6 +70,7 @@ class TestApi(unittest.TestCase):
             headers = {"content-type":"application/json"}
         )
         self.assertEqual(response.status_code,200)
+        
 
     def test_decline_order(self):
         response = self.client.put(
