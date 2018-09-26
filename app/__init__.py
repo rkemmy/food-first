@@ -18,12 +18,8 @@ def create_app(config_stage):
     api.add_resource(Orders, '/orders')
     api.add_resource(GetOneOrder, '/orders/<int:id>')
     api.add_resource(AcceptOrder,'/orders/accept/<int:id>')
-    # api.add_resource(ApprovedOrders,'/orders/approved')
     api.add_resource(DeclineOrder,'/orders/decline/<int:id>')
-    # # api.add_resource(DeclinedOrders,'/orders/declined')
-    # api.add_resource(PendingOrders,'/orders/pending')
     api.add_resource(CompleteOrder,'/orders/completeorder/<int:id>')
-    # api.add_resource(CompletedOrders,'/orders/completed')
     api.add_resource(Status, '/orderss')
 
 
