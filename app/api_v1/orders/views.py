@@ -1,6 +1,8 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
+
 from flask import request
 from app.models import orders, Order
+
 
 
 class Orders(Resource):
@@ -15,14 +17,24 @@ class Orders(Resource):
     def post(self):
         ''' Method that posts an order '''
         data = request.get_json(force=True)
-        if not data:
-            return ({'message': 'No input data provided'}, 400)
+        if not data['name'] or not data['description'] or not data['price']:
+            return ({'message': 'Input data not complete'}, 400)
+
+        elif type(data['name']) or type(data['description']) != "":
+            return {'message': 'Input should be a string'}
+        
+        else:
+            if type(data['price']) != int:
+                return {'message': 'Input integer'}
+
+    
 
         name = data['name']
         description = data['description']
         price = data['price'] 
+        status = data['status']
         
-        new_order = Order(name, description, price)
+        new_order = Order(name, description, price, status)
 
         if name in orders:
             return {'message': 'Order already exists'}
@@ -61,6 +73,7 @@ class GetOneOrder(Resource):
             order.name= data['name']
             order.description = data['description']
             order.price = data['price']
+            order.status = data['status']
             return {"message":order.serialize()},201
         
         return {"Message":"Order not found"},404
@@ -87,16 +100,62 @@ class AcceptOrder(Resource):
         
         return {"message":"uhh,we seem not to find any orders"}
 
-class ApprovedOrders(Resource):
-
+class Status(Resource):
+    
+    def get_args(self, querystrings):
+        parser = reqparse.RequestParser()
+        for query in querystrings:
+            parser.add_argument(query, type=str)
+        return parser.parse_args()        
+    
     def get(self):
-        approvedorders = []
-        for order in orders:
-            if order.status == "approved":
-                approvedorders.append(order)
-                return {"message":[order.serialize() for order in approvedorders]},200
+        norder = Order().get_by_id(id)
+        args = self.get_args(['status', 'approved'])
+        order = self.get_args(['name', 'name'])
+        return {'order': [norder.serialize() for norder in orders if norder.status == 'pending'], 'status': args['status']}, 200
 
-        return {"message":"unfortunately there are no approved orders"},200
+        # return {}
+        # approvedorders = []
+
+        # for order in orders:
+        #     if order.status == "approved":
+        #         approvedorders.append(order)
+        #         return {"message":[order.serialize() for order in approvedorders]},200
+            
+        # return {"message":"unfortunately there are no approved orders"},200
+    
+
+    def get_declined_orders(self):
+        # args = self.get_args(['status'], 'declined')
+        declinedorders = []
+        for order in orders:
+            if order.status == "declined":
+                declinedorders.append(order)
+                return {"message":[order.serialize() for order in declinedorders]},200
+
+        return {"message":"there are no declined orders"},200
+
+    def get_pending_orders(self):
+        pendingorders = []
+        for order in orders:
+            if order.status == "pending":
+                pendingorders.append(order)
+            return {"pending orders":[order.serialize() for order in pendingorders]}
+
+        return {"message":"there are no declined orders"},200
+
+
+
+# class ApprovedOrders(Resource):
+
+#     def get(self):
+#         approvedorders = []
+#         for order in orders:
+#             if order.status == "approved":
+#                 approvedorders.append(order)
+#                 return {"message":[order.serialize() for order in approvedorders]},200
+
+#         return {"message":"unfortunately there are no approved orders"},200
 
 
 class DeclineOrder(Resource):
@@ -113,26 +172,26 @@ class DeclineOrder(Resource):
         
         return {"message":"Damn!Your order was not found"}
 
-class DeclinedOrders(Resource):
+# class DeclinedOrders(Resource):
     
-    def get(self):
+#     def get(self):
 
-        declinedorders = []
-        for order in orders:
-            if order.status == "declined":
-                declinedorders.append(order)
+#         declinedorders = []
+#         for order in orders:
+#             if order.status == "declined":
+#                 declinedorders.append(order)
         
         
-        return {"declined orders":[order.serialize() for order in declinedorders]}
+#         return {"declined orders":[order.serialize() for order in declinedorders]}
         
 
-class PendingOrders(Resource):
-    def get(self):
-        pendingorders = []
-        for order in orders:
-            if order.status == "pending":
-                pendingorders.append(order)
-        return {"pending orders":[order.serialize() for order in pendingorders]}
+# class PendingOrders(Resource):
+#     def get(self):
+#         pendingorders = []
+#         for order in orders:
+#             if order.status == "pending":
+#                 pendingorders.append(order)
+#         return {"pending orders":[order.serialize() for order in pendingorders]}
 
 
 class CompleteOrder(Resource):
@@ -145,17 +204,11 @@ class CompleteOrder(Resource):
                 order.status = "completed"
                 return {"message":"Order has beeen completed and will be delivered"}
         return {"message":"order not found"}
-class CompletedOrders(Resource):
-    def get(self):
-        completedorders = []
-        for order in orders:
-            if order.status == "completed":
-                completedorders.append(order)
-        return {"completed orders":[order.serialize() for order in completedorders]}
+# class CompletedOrders(Resource):
+#     def get(self):
+#         completedorders = []
+#         for order in orders:
+#             if order.status == "completed":
+#                 completedorders.append(order)
+#         return {"completed orders":[order.serialize() for order in completedorders]}
         
-
-
-
-        
-
-

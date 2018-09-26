@@ -22,6 +22,27 @@ class TestApi(unittest.TestCase):
         res = self.client.get('/api/v1/orders', content_type='application/json')
 
         self.assertEqual(res.status_code, 200)
+        self.assertEqual(json.loads(res.data)['message'], "empty list")
+
+    def test_list_not_empty(self):
+        create_data = {
+        "name":"ugali",
+        "description":"spicy",
+        "price":50
+        }
+        res = self.client.post(
+            "api/v1/orders",
+            data = json.dumps(create_data),
+            headers = {"content-type":"application/json"}
+        )
+
+        res = self.client.get('/api/v1/orders', content_type='application/json')
+
+        self.assertEqual(res.status_code, 200)
+        print(res)
+        self.assertEqual(json.loads(res.data)['Orders'], [{'description': 'spicy', 'id': 4,'name': 'ugali', 'price': 50, 'status': 'pending'}])
+
+        
        
 
     def test_post_orders(self):
@@ -38,6 +59,7 @@ class TestApi(unittest.TestCase):
         )
         self.assertEqual(response.status_code,201)
         self.assertEqual(json.loads(response.data)['message'], "order successfully created")
+        
     # def test_delete_order(self):
     #     res = self.client.delete('/api/v1/orders/1', content_type='application/json')
 
