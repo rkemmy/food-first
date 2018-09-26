@@ -17,14 +17,14 @@ class Orders(Resource):
     def post(self):
         ''' Method that posts an order '''
         data = request.get_json(force=True)
-        if not data['name'] or not data['description'] or not data['price']:
+        if data['name'].strip() == "" or data['description'].strip() == "":
             return ({'message': 'Input data not complete'}, 400)
 
-        elif type(data['name']) or type(data['description']) != "":
+        elif not isinstance(data['name'], str) or not isinstance(data['description'], str):
             return {'message': 'Input should be a string'}
         
         else:
-            if type(data['price']) != int:
+            if not isinstance(data['price'], int):
                 return {'message': 'Input integer'}
 
     
@@ -44,13 +44,6 @@ class Orders(Resource):
         return {"message":"order successfully created",
                 "order":new_order.serialize()
                 },201
-
-    # def delete(self):
-    #     all_orders = Order.get_all()
-    #     return all_orders
-    #      if orders.remove(all_orders):
-    #          return {'message': 'all orders deleted'}       
-
 
 class GetOneOrder(Resource):
     
@@ -111,22 +104,10 @@ class Status(Resource):
     def get(self):
         norder = Order().get_by_id(id)
         args = self.get_args(['status', 'approved'])
-        order = self.get_args(['name', 'name'])
+        norder = self.get_args(['name', 'name'])
         return {'order': [norder.serialize() for norder in orders if norder.status == 'pending'], 'status': args['status']}, 200
-
-        # return {}
-        # approvedorders = []
-
-        # for order in orders:
-        #     if order.status == "approved":
-        #         approvedorders.append(order)
-        #         return {"message":[order.serialize() for order in approvedorders]},200
-            
-        # return {"message":"unfortunately there are no approved orders"},200
     
-
     def get_declined_orders(self):
-        # args = self.get_args(['status'], 'declined')
         declinedorders = []
         for order in orders:
             if order.status == "declined":
@@ -144,20 +125,6 @@ class Status(Resource):
 
         return {"message":"there are no declined orders"},200
 
-
-
-# class ApprovedOrders(Resource):
-
-#     def get(self):
-#         approvedorders = []
-#         for order in orders:
-#             if order.status == "approved":
-#                 approvedorders.append(order)
-#                 return {"message":[order.serialize() for order in approvedorders]},200
-
-#         return {"message":"unfortunately there are no approved orders"},200
-
-
 class DeclineOrder(Resource):
 
     def put(self,id):
@@ -172,27 +139,6 @@ class DeclineOrder(Resource):
         
         return {"message":"Damn!Your order was not found"}
 
-# class DeclinedOrders(Resource):
-    
-#     def get(self):
-
-#         declinedorders = []
-#         for order in orders:
-#             if order.status == "declined":
-#                 declinedorders.append(order)
-        
-        
-#         return {"declined orders":[order.serialize() for order in declinedorders]}
-        
-
-# class PendingOrders(Resource):
-#     def get(self):
-#         pendingorders = []
-#         for order in orders:
-#             if order.status == "pending":
-#                 pendingorders.append(order)
-#         return {"pending orders":[order.serialize() for order in pendingorders]}
-
 
 class CompleteOrder(Resource):
     def put(self,id):
@@ -204,11 +150,7 @@ class CompleteOrder(Resource):
                 order.status = "completed"
                 return {"message":"Order has beeen completed and will be delivered"}
         return {"message":"order not found"}
-# class CompletedOrders(Resource):
-#     def get(self):
-#         completedorders = []
-#         for order in orders:
-#             if order.status == "completed":
-#                 completedorders.append(order)
-#         return {"completed orders":[order.serialize() for order in completedorders]}
-        
+
+#TODO 
+#create a class for returning a list of orders depending on status
+
