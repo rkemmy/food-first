@@ -4,7 +4,7 @@ from app import create_app
 from unittest import TestCase
 from flask_restful import Resource
 
-from app.api_v1.orders.views import Order, GetOneOrder
+from app.api.v1.views import Order, GetOneOrder, AcceptOrder, Status, DeclineOrder, CompleteOrder
 
 
 class TestApi(unittest.TestCase):
@@ -28,7 +28,8 @@ class TestApi(unittest.TestCase):
         create_data = {
         "name":"ugali",
         "description":"spicy",
-        "price":50
+        "price":50,
+        "status": "pending"
         }
         res = self.client.post(
             "api/v1/orders",
@@ -38,7 +39,7 @@ class TestApi(unittest.TestCase):
 
         res = self.client.get('/api/v1/orders', content_type='application/json')
 
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 200 )
         print(res)
         self.assertEqual(json.loads(res.data)['Orders'], [{'description': 'spicy', 'id': 4,'name': 'ugali', 'price': 50, 'status': 'pending'}])
 
@@ -48,15 +49,17 @@ class TestApi(unittest.TestCase):
     def test_post_orders(self):
         '''test create food item'''
         create_data = {
-            "name":"ugali",
+            "name":"ugali beef",
             "description":"spicy",
-            "price":50
+            "price":50,
+            "status": "pending"
         }
         response = self.client.post(
             "api/v1/orders",
             data = json.dumps(create_data),
             headers = {"content-type":"application/json"}
         )
+
         self.assertEqual(response.status_code,201)
         self.assertEqual(json.loads(response.data)['message'], "order successfully created")
         
@@ -69,21 +72,6 @@ class TestApi(unittest.TestCase):
             headers = {"content-type":"application/json"}
         )
 
-        self.assertEqual(response.status_code,200)
-
-    def test_get_completed_orders(self):
-        response = self.client.get(
-            'api/v1/orders/completed',
-            headers = {"content-type":"application/json"}
-        )
-        self.assertEqual(response.status_code,200)
-
-
-    def test_get_pending_orders(self):
-        response = self.client.get(
-            'api/v1/orders/pending',
-            headers = {"content-type":"application/json"}
-        )
         self.assertEqual(response.status_code,200)
 
     def test_complete_order(self):
@@ -102,18 +90,4 @@ class TestApi(unittest.TestCase):
 
         self.assertEqual(response.status_code,200)
 
-    def test_declined_orders(self):
-        response = self.client.get(
-            "api/v1/orders/declined",
-        headers = {"content-type":"application/json"}
-        )
-        self.assertEqual(response.status_code,200)
-
-    def test_get_approved_orders(self):
-        response = self.client.get(
-            "api/v1/orders/approved",
-            headers = {"content-type":"application/json"}
-        )
-
-        self.assertEqual(response.status_code,200)
 
