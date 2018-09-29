@@ -126,6 +126,44 @@ class Status(Resource):
         norder = self.get_args(['name', 'name'])
         return {'order': [norder.serialize() for norder in orders if norder.status == 'pending'], 'status': args['status']}, 200
     
+    def get_declined_orders(self):
+        declinedorders = []
+        for order in orders:
+            if order.status == "declined":
+                declinedorders.append(order)
+                return {"message":[order.serialize() for order in declinedorders]},200
+
+        return {"message":"there are no declined orders"},200
+
+    def get_pending_orders(self):
+        pendingorders = []
+        for order in orders:
+            if order.status == "pending":
+                pendingorders.append(order)
+            return {"pending orders":[order.serialize() for order in pendingorders]}
+
+        return {"message":"there are no declined orders"},200
+
+class DeclineOrder(Resource):
+
+    def put(self,id):
+
+        order = Order().get_by_id(id)
+        if order:
+            if order.status != "pending" and order.status == "declined":
+                return {"message":"order already {}".format(order.status)}
+        
+        return {"message":"Damn!Your order was not found"}
+
+
+class CompleteOrder(Resource):
+    def put(self,id):
+        order = Order().get_by_id(id)
+        if order:
+            if order.status == "approved":
+                order.status = "completed"
+                return {"message":"Order has beeen completed and will be delivered"}
+        return {"message":"order not found"}
 
 #TODO 
 #create a class for returning a list of orders depending on status
