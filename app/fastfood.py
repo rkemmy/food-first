@@ -35,3 +35,4 @@ CREATE TABLE IF NOT EXIST orders(
     delivery_date INT64 TIMESTAMP,
 )
 """
+tables = [user_table, meals_table, category_table, order_table ]
