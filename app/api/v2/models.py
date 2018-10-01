@@ -99,6 +99,19 @@ class MealItem(ConnectDB):
         self.connection.commit()
         self.cursor.close()
 
+    def get_all_meals(self):
+        '''  Get all food meals '''
+        self.cursor.execute(''' SELECT * FROM meals''')
+
+        meals = self.cursor.fetchall()
+
+        self.connection.commit()
+        self.cursor.close()
+
+        if meals:
+            return [self.objectify(meal) for meal in meals]
+        return None
+
     def serialize(self):
         ''' Return object as dictionary '''
         return dict (
