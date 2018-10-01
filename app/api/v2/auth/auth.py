@@ -22,6 +22,9 @@ class Signup(Resource):
 
         if not re.match("^[a-zA-Z0-9$!#]{8,20}$", password):
             return {'message':'Enter a valid password'}, 400
+        
+        if User().get_user_by_username(username):
+            return {'message': 'username already in use'}, 400
 
         user = User(username, email, password)
 
