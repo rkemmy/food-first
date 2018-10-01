@@ -59,4 +59,3 @@ class Login(Resource):
             'token': token,
             'message': f'You were successfully logged in {username}'
         }, 200
-
