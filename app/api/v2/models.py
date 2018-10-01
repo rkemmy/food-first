@@ -36,7 +36,33 @@ class User(ConnectDB):
         self.connection.commit()
         self.cursor.close()
 
+    def get_user_by_username(self, username):
+        ''' get user by username '''
+        self.cursor.execute(''' SELECT * FROM users WHERE username=%s''',
+                            (username, ))
 
+        user = self.cursor.fetchone()
+
+        self.connection.commit()
+        self.cursor.close()
+
+        if user:
+            return self.objectify_user(user)
+        return None
+
+    def get_user_by_email(self, email):
+        ''' get user by email '''
+        self.cursor.execute(''' SELECT * FROM users WHERE email=%s''',
+                            (email, ))
+
+        user = self.cursor.fetchone()
+
+        self.connection.commit()
+        self.cursor.close()
+
+        if user:
+            return self.objectify_user(user)
+        return None
 
     def serialize(self):
         '''return an object as dictionary'''
