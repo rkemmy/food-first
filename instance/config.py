@@ -5,7 +5,7 @@ class Config(object):
     pass
     CSRF_ENABLED = True
 
-    SECRET = os.getenv('SECRET')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 
 class DevelopmentConfig(Config):
     """ Development configuration class that inherits from the Config Parent Class"""
