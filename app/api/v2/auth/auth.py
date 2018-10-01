@@ -1,3 +1,5 @@
+import re
+
 from flask_restful import Resource
 from flask import request
 from werkzeug.security import check_password_hash
@@ -11,6 +13,15 @@ class Signup(Resource):
         username = data['username']
         email = data["email"]
         password = data['password']
+
+        if not re.match('^[a-zA-Z0-9]{6,20}$', username):
+            return {'message':'Please enter a valid username'}, 400
+
+        if not re.match(r"^[^@]+@[^@]+\.[^@]+$", email):
+            return {'message': 'Invalid email'}, 400
+
+        if not re.match("^[a-zA-Z0-9$!#]{8,20}$", password):
+            return {'message':'Enter a valid password'}, 400
 
         user = User(username, email, password)
 
