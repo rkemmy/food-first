@@ -25,6 +25,10 @@ class Signup(Resource):
         
         if User().get_user_by_username(username):
             return {'message': 'username already in use'}, 400
+        
+        if User().get_user_by_email(email):
+            return {'message': 'email already in use'}, 400
+
 
         user = User(username, email, password)
 
