@@ -81,4 +81,37 @@ class User(ConnectDB):
         self.password = data[3]
         self.is_admin = data[4]
 
-        return self            
+        return self  
+
+class MealItem(ConnectDB):
+    def __init__(self, name=None, description=None, price=None):
+        super().__init__()
+        self.name = name
+        self.description = description
+        self.price = price
+
+    def add(self):
+        ''' Add food item to fooditems table'''
+        self.cursor.execute(
+            ''' INSERT INTO meals(name, description, price) VALUES(%s, %s, %s)''',
+            (self.name, self.description, self.price))
+
+        self.connection.commit()
+        self.cursor.close()
+
+    def serialize(self):
+        ''' Return object as dictionary '''
+        return dict (
+            id = self.id,
+            name = self.name,
+            description = self.description,
+            price = self.price
+        )
+
+    def objectify(self, data):
+        ''' map tuple to an object '''
+        item = MealItem(name=data[1], description=data[2], price=data[3])
+        item.id = data[0]
+        self = item
+        return self
+          
