@@ -1,5 +1,6 @@
 import psycopg2
 import os
+from app.api.v2.auth.auth import User
 
 class ConnectDB:
     def __init__(self):
@@ -54,6 +55,32 @@ class CreateTables(ConnectDB):
         self.conn.commit()
         self.cursor.close()
 
+    def drop(self):
+        queries = [
+            '''
+            DROP TABLE IF EXISTS users
+            ''',
+            '''
+            DROP TABLE IF EXISTS meals
+            ''',
+            '''
+            DROP TABLE IF EXISTS orders
+            '''
+        ]
+
+        for query in queries:
+            self.cursor.execute(query)
+
+        self.conn.commit()
+        self.cursor.close()
+
+    def add_admin(self):
+        admin = User(username='Useradmin', email='admin@gmail.com',
+                 password='Admin123', is_admin=True)
+        admin.add()
+
 
 if __name__ == '__main__':
+    CreateTables().drop()
     CreateTables().create_tables()
+    CreateTables().add_admin()
