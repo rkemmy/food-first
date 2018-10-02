@@ -196,6 +196,13 @@ class Order(ConnectDB):
             return [self.objectify(order) for order in orders]
         return None
 
+    def delete(self, order_id):
+        ''' Delete order '''
+        self.cursor.execute(''' DELETE FROM orders WHERE id=%s''',
+                            (order_id, ))
+        self.connection.commit()
+        self.cursor.close()
+
     def serialize(self):
         ''' return object as a dictionary '''
         return dict (
