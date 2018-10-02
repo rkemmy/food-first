@@ -100,10 +100,10 @@ class MealItem(ConnectDB):
         self.connection.commit()
         self.cursor.close()
 
-    def get_meal_by_name(self, name):
+    def get_by_id(self, id):
         '''fetch an item by id'''
-        self.cursor.execute(""" SELECT * FROM meals WHERE name = '%s' """ %
-                            (name))
+        self.cursor.execute(""" SELECT * FROM meals WHERE id = '%s' """ %
+                            (id, ))
 
         meal = self.cursor.fetchone()
 
@@ -126,6 +126,13 @@ class MealItem(ConnectDB):
         if meals:
             return [self.objectify(meal) for meal in meals]
         return None
+
+    def delete(self, order_id):
+        ''' Delete order '''
+        self.cursor.execute(''' DELETE FROM meals WHERE id=%s''',
+                            (order_id, ))
+        self.connection.commit()
+        self.cursor.close()
 
     def serialize(self):
         ''' Return object as dictionary '''

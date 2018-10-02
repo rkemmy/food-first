@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 from app.api.v1.views import Orders, GetOneOrder,AcceptOrder,DeclineOrder,CompleteOrder,Status
 from instance.config import app_config
 from app.api.v2.auth import Signup, Login
-from app.api.v2.meals import Meals
+from app.api.v2.meals import Meals, SpecificMeal
 from app.api.v2.orders import PostOrder, SpecificOrder
 
 jwt = JWTManager()
@@ -37,6 +37,7 @@ def create_app(config_stage):
     api.add_resource(Orders, '/orders')
     orderly.add_resource(PostOrder, '/post')
     orderly.add_resource(SpecificOrder, '/orderly/<int:id>')
+    meal.add_resource(SpecificMeal, '/meals/<int:id>')
     meal.add_resource(Meals, '/meals')
     api.add_resource(GetOneOrder, '/orders/<int:id>')
     api.add_resource(AcceptOrder,'/orders/accept/<int:id>')
