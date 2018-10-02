@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-from .orders import PostOrder
+from .orders import PostOrder, SpecificOrder
 
-post_order_blueprint = Blueprint('post_orders', __name__)
+orderly_blueprint = Blueprint('orderly', __name__)
