@@ -16,14 +16,24 @@ class PostOrder(Resource):
         name = data['name']
 
         meal_item = MealItem().get_meal_by_name(name)
-
         if not meal_item:
             return {"message": "food item not found"}, 404
 
 
-        order = Order(current_user, meal_item.name, meal_item.description,
-                      meal_item.price)
-
+        order = Order(username=current_user['username'], title=meal_item.name, description=meal_item.description,
+                      price=meal_item.price)
         order.add()
 
-        return {"meassage": "order placed sucessfully"}, 201
+        return {"message": "order placed sucessfully"}, 201
+
+class SpecificOrder(Resource):
+    @jwt_required
+    def get(self, id):
+        '''get a specific order by id'''
+
+        order = Order().get_by_id(id)
+
+        if order:
+            return {"order": order.serialize()}, 200
+
+        return {"message": "Order not found"}, 404
