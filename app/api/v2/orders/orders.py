@@ -25,6 +25,15 @@ class PostOrder(Resource):
         order.add()
 
         return {"message": "order placed sucessfully"}, 201
+    
+    def get(self):
+        ''' get all orders'''
+        order_items = Order().get_all_orders()
+        if order_items:
+            return {
+                "orders": [order_item.serialize() for order_item in order_items]
+            }, 200
+        return {"message": "No orders found"}
 
 class SpecificOrder(Resource):
     @jwt_required
