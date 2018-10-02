@@ -48,3 +48,27 @@ class SpecificOrder(Resource):
             return {"order": order.serialize()}, 200
 
         return {"message": "Order not found"}, 404
+
+    @jwt_required
+    def put(self, id):
+        ''' Method that updates a specific order '''
+        
+        order = Order().get_by_id(id)
+        data = request.get_json(force=True)
+
+        if not (get_jwt_identity()['is_admin']):
+            return {'message':'You cannot access this route'}, 401
+
+        elif data['status'].strip() == "":
+            return ({'message': 'Enter valid status input'}, 400)
+
+        else:
+            if not isinstance(data['status'], str):
+                return {'message': 'Input should be a string'}
+        
+        if order:
+            order.status = data['status']
+            return {"message":order.serialize()},201
+        
+        return {"Message":"Order not found"},404
+
