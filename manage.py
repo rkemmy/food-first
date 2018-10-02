@@ -34,15 +34,19 @@ class CreateTables(ConnectDB):
         """
         CREATE TABLE IF NOT EXISTS meals(
             id serial PRIMARY KEY,
-            name VARCHAR NOT NULL,  
-            price INTEGER NOT NULL,
-            description VARCHAR NOT NULL
+            name VARCHAR NOT NULL,
+            description VARCHAR NOT NULL , 
+            price INT NOT NULL
+            
         )
         """,
         """
         CREATE TABLE IF NOT EXISTS orders(
             id serial PRIMARY KEY,
             username VARCHAR NOT NULL,
+            title VARCHAR NOT NULL,
+            description VARCHAR NOT NULL,
+            price INT NOT NULL,
             status VARCHAR NOT NULL,
             order_date TIMESTAMP
         )
