@@ -183,6 +183,19 @@ class Order(ConnectDB):
             return self.objectify(order)
         return None
 
+    def get_all_orders(self):
+        '''  Get all food orders '''
+        self.cursor.execute(''' SELECT * FROM orders''')
+
+        orders = self.cursor.fetchall()
+
+        self.connection.commit()
+        self.cursor.close()
+
+        if orders:
+            return [self.objectify(order) for order in orders]
+        return None
+
     def serialize(self):
         ''' return object as a dictionary '''
         return dict (
