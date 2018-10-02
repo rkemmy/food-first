@@ -72,3 +72,14 @@ class SpecificOrder(Resource):
         
         return {"Message":"Order not found"},404
 
+    @jwt_required
+    def delete(self, id):
+        ''' Method that deletes a specific order '''
+
+        order = Order().get_by_id(id)
+
+        if order:
+            order.delete(id)
+            return {"message": "order deleted successfully"}
+
+        return {"message": "Order not found"}
