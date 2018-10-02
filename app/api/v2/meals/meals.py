@@ -42,8 +42,23 @@ class Meals(Resource):
         '''return a list of created mealitems'''
 
         meal_items = MealItem().get_all_meals()
-        return {
-            "food_items": [meal_item.serialize() for meal_item in meal_items]
-        }, 200
+        if meal_items:
+            return {
+                "food_items": [meal_item.serialize() for meal_item in meal_items]
+            }, 200
 
-        return {"message": "meal item created"}
+        return {"message": "meal item not found"}
+
+class SpecificMeal(Resource):
+
+    @jwt_required
+    def delete(self, id):
+        ''' Method that deletes a specific order '''
+
+        meal_item = MealItem().get_by_id(id)
+
+        if meal_item:
+            meal_item.delete(id)
+            return {"message": "meal deleted successfully"}
+
+        return {"message": "Order not found"}
