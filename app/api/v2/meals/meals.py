@@ -37,7 +37,7 @@ class Meals(Resource):
 
         return {"message": "meal successfully created"}
 
-    @jwt_required
+
     def get(self):
         '''return a list of created mealitems'''
 

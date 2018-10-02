@@ -26,7 +26,9 @@ class PostOrder(Resource):
 
         return {"message": "order placed sucessfully"}, 201
     
+    @jwt_required
     def get(self):
+
         ''' get all orders'''
         order_items = Order().get_all_orders()
         if order_items:
