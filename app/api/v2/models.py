@@ -86,6 +86,7 @@ class User(ConnectDB):
 class MealItem(ConnectDB):
     def __init__(self, name=None, description=None, price=None):
         super().__init__()
+        self.id = id
         self.name = name
         self.description = description
         self.price = price
@@ -144,6 +145,7 @@ class MealItem(ConnectDB):
         
 class Order(ConnectDB):
     def __init__(self,
+                # id = None,
                  username=None,
                  title=None,
                  description = None,
@@ -152,17 +154,17 @@ class Order(ConnectDB):
         super().__init__()
         self.username = username
         self.title = title
-        self. description = description
+        self.description = description
         self.price = price
         self.status = status
-        self.date = datetime.now()
+        
 
     def add(self):
         ''' Add food order to database'''
+        print(self.username)
         self.cursor.execute(
-            ''' INSERT INTO orders(username, title, description, price, status, date) VALUES(%s, %s, %s, %s,%s, %s, %s)''',
-            (self.username, self.title, self.description, self.price,
-             self.status, self.date))
+            """ INSERT INTO orders(username, title, description, price, status) VALUES('%s','%s','%s','%s','%s')""" %
+            (self.username, self.title, self.description, self.price,self.status))
 
         self.connection.commit()
         self.cursor.close()
