@@ -15,7 +15,7 @@ class PostOrder(Resource):
         current_user = get_jwt_identity()
         name = data['name']
 
-        meal_item = MealItem().get_meal_by_name(name)
+        meal_item = MealItem().get_by_id(id)
         if not meal_item:
             return {"message": "food item not found"}, 404
 
@@ -83,3 +83,19 @@ class SpecificOrder(Resource):
             return {"message": "order deleted successfully"}
 
         return {"message": "Order not found"}
+
+class UserHistory(Resource):
+    @jwt_required
+    def get(self, username):
+        ''' Method to get all orders of a particular user '''
+        user = User().get_user_by_username(username)
+        
+
+        order_items = Order().get_order_history(user)
+
+        if order_items:
+            return {
+                "orders": [order_item.serialize() for order_item in order_items]
+            }, 200
+
+        return {"message": "User Not Found"}
