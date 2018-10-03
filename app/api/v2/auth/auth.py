@@ -54,7 +54,7 @@ class Login(Resource):
         if not check_password_hash(user.password, password):
             return {'message': 'Wrong password'}, 400
 
-        token = create_access_token(user.serialize())
+        token = create_access_token(identity=(username, user.is_admin ))
         return {
             'token': token,
             'message': f'You were successfully logged in {username}'

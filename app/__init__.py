@@ -37,7 +37,7 @@ def create_app(config_stage):
     api.add_resource(Orders, '/orders')
     orderly.add_resource(PostOrder, '/post')
     orderly.add_resource(SpecificOrder, '/orderly/<int:id>')
-    orderly.add_resource(UserHistory, '/orderly/history/<username>')
+    orderly.add_resource(UserHistory, '/orderly/history')
     meal.add_resource(SpecificMeal, '/meals/<int:id>')
     meal.add_resource(Meals, '/meals')
     api.add_resource(GetOneOrder, '/orders/<int:id>')

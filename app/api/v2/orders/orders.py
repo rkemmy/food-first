@@ -15,12 +15,13 @@ class PostOrder(Resource):
         current_user = get_jwt_identity()
         name = data['name']
 
-        meal_item = MealItem().get_by_id(id)
+        meal_item = MealItem().get_by_name(name)
+        print(meal_item)
         if not meal_item:
             return {"message": "food item not found"}, 404
 
 
-        order = Order(username=current_user['username'], title=meal_item.name, description=meal_item.description,
+        order = Order(username=current_user[0], title=meal_item.name, description=meal_item.description,
                       price=meal_item.price)
         order.add()
 
@@ -31,6 +32,12 @@ class PostOrder(Resource):
 
         ''' get all orders'''
         order_items = Order().get_all_orders()
+
+        user = get_jwt_identity()
+
+        if not (user[1]):
+            return {'message':'You cannot access this route'}, 401
+
         if order_items:
             return {
                 "orders": [order_item.serialize() for order_item in order_items]
@@ -44,6 +51,11 @@ class SpecificOrder(Resource):
 
         order = Order().get_by_id(id)
 
+        user = get_jwt_identity()
+
+        if not (user[1]):
+            return {'message':'You cannot access this route'}, 401
+
         if order:
             return {"order": order.serialize()}, 200
 
@@ -56,7 +68,9 @@ class SpecificOrder(Resource):
         order = Order().get_by_id(id)
         data = request.get_json(force=True)
 
-        if not (get_jwt_identity()['is_admin']):
+        user = get_jwt_identity()
+
+        if not (user[1]):
             return {'message':'You cannot access this route'}, 401
 
         elif data['status'].strip() == "":
@@ -78,6 +92,11 @@ class SpecificOrder(Resource):
 
         order = Order().get_by_id(id)
 
+        user = get_jwt_identity()
+
+        if not (user[1]):
+            return {'message':'You cannot access this route'}, 401
+
         if order:
             order.delete(id)
             return {"message": "order deleted successfully"}
@@ -86,16 +105,18 @@ class SpecificOrder(Resource):
 
 class UserHistory(Resource):
     @jwt_required
-    def get(self, username):
+    def get(self):
         ''' Method to get all orders of a particular user '''
-        user = User().get_user_by_username(username)
+        username = get_jwt_identity()[0]
         
 
-        order_items = Order().get_order_history(user)
+        order_items = Order().get_order_history(username)
 
         if order_items:
             return {
+                "username": username,
                 "orders": [order_item.serialize() for order_item in order_items]
+                
             }, 200
 
         return {"message": "User Not Found"}
