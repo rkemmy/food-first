@@ -8,6 +8,7 @@ class ConnectDB:
             self.conn = psycopg2.connect(
                 os.getenv('DATABASE_URL')
                 )
+            print("connected")
             self.cursor = self.conn.cursor()
 
         except (Exception, psycopg2.DatabaseError) as error:
