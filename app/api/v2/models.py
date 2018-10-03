@@ -102,8 +102,8 @@ class MealItem(ConnectDB):
 
     def get_by_id(self, id):
         '''fetch an item by id'''
-        self.cursor.execute(""" SELECT * FROM meals WHERE id = '%s' """ %
-                            (id, ))
+
+        self.cursor.execute(""" SELECT * FROM meals WHERE id=%s """, (id, ))
 
         meal = self.cursor.fetchone()
 
@@ -189,6 +189,19 @@ class Order(ConnectDB):
         if order:
             return self.objectify(order)
         return None
+
+    def get_order_history(self, username):
+        ''' fetch all orders of a particular user'''
+        self.cursor.execute(''' SELECT * FROM orders WHERE username=%s''', (username, ))
+
+        orders = self.cursor.fetchall()
+
+        self.connection.commit()
+        self.cursor.close()
+
+        if orders:
+            return [self.objectify(order) for order in orders]
+        return None 
 
     def get_all_orders(self):
         '''  Get all food orders '''
