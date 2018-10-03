@@ -5,7 +5,7 @@ from app.api.v1.views import Orders, GetOneOrder,AcceptOrder,DeclineOrder,Comple
 from instance.config import app_config
 from app.api.v2.auth import Signup, Login
 from app.api.v2.meals import Meals, SpecificMeal
-from app.api.v2.orders import PostOrder, SpecificOrder
+from app.api.v2.orders import PostOrder, SpecificOrder, UserHistory
 
 jwt = JWTManager()
 
@@ -37,6 +37,7 @@ def create_app(config_stage):
     api.add_resource(Orders, '/orders')
     orderly.add_resource(PostOrder, '/post')
     orderly.add_resource(SpecificOrder, '/orderly/<int:id>')
+    orderly.add_resource(UserHistory, '/orderly/history')
     meal.add_resource(SpecificMeal, '/meals/<int:id>')
     meal.add_resource(Meals, '/meals')
     api.add_resource(GetOneOrder, '/orders/<int:id>')

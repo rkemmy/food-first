@@ -15,10 +15,12 @@ class Meals(Resource):
         description = data['description']
         price = data['price']
 
-        if not (get_jwt_identity()['is_admin']):
+        user = get_jwt_identity()
+
+        if not (user[1]):
             return {'message':'You cannot access this route'}, 401
        
-        if MealItem().get_meal_by_name(name):
+        if MealItem().get_by_name(name):
             return {'message': f'meal with name {name} alredy exists'}, 400
 
         if not re.match('^[a-zA-Z 0-9]+$', name):
@@ -35,7 +37,7 @@ class Meals(Resource):
 
         mealitem.add()
 
-        return {"message": "meal successfully created"}
+        return {"message": "Meal successfully created"}
 
 
     def get(self):
@@ -56,6 +58,11 @@ class SpecificMeal(Resource):
         ''' Method that deletes a specific order '''
 
         meal_item = MealItem().get_by_id(id)
+
+        user = get_jwt_identity()
+
+        if not (user[1]):
+            return {'message':'You cannot access this route'}, 401
 
         if meal_item:
             meal_item.delete(id)
