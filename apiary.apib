@@ -1,0 +1,275 @@
+FORMAT: 1A
+HOST: http://mealani.herokuapp.com/
+
+# FoodFirst 
+
+FoodFirst is an app that allows users to order fast food.
+
+## Signup [/api/v2/auth/signup]
+### List All Questions [POST]
+
+Register user credentials and create account
+
++ Request (application/json)
+
+            {
+                "username":"risperky",
+                "email": "remmyk@gmail.com",
+                "password": "Password123"
+            }       
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /questions/2
+
+    + Body
+
+            {
+                "message": "Account created successfully"
+            }
+            
+
+## Login [/api/v2/auth/login]
+### List All Questions [POST]
+
+Signs in registered users
+
++ Request (application/json)
+
+            {
+                "username":"risperky",
+                "password": "Password123"
+            }         
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /questions/2
+
+    + Body
+
+            {
+                "token": "eyJ0eXAiOiJ",
+                "message": "You were successfully logged in username"
+            }
+
+## Post Meal [/api/v2/menu]
+### List All Questions [POST]
+
+Creates meal item if logged in user is admin
+
++ Request (application/json)
+           {
+              "name":"uji uji",
+               "description": "djss",
+               "price": 23
+           
+           }
+       
+
++ Response 201 (application/json)
+
+    + Headers
+
+            
+
+    + Body
+
+            {
+                
+                "message": "Meal successfully created"
+            }
+
+## Post Order [/api/v2/users/orders]
+### List All Questions [POST]
+
+Creates an order if meal exists on the menu
+
++ Request (application/json)
+
+           {
+               "username": "remmy",
+               "name":"uji cake",
+               "description": "djss",
+               "price": 23
+           } 
+
++ Response 201 (application/json)
+
+    + Headers
+
+            
+
+    + Body
+
+            {
+                "message": "order placed sucessfully"
+            }
+
+## Get one order [/api/v2/users/orders/1]
+### List All Questions [GET]
+
+Fetches a specific order by id
+
++ Response 200 (application/json)
+
+        
+            {
+                "order": {
+                "id": 1,
+                "title": "djss",
+                "description": "uji mayai",
+                "price": 23,
+                "status": "Pending",
+                "date": "None"
+            }
+        
+
+## Get user history [/api/v2/users/history]
+### List All Questions [GET]
+
+Gets all orders placed by a particular user
+
++ Response 200 (application/json)
+
+        
+            {
+                "username": "risperk",
+                "orders": [
+                    {
+                        "id": 1,
+                        "title": "djss",
+                        "description": "uji mayai",
+                        "price": 23,
+                        "status": "Pending",
+                        "date": "None"
+                    },
+                    {
+                        "id": 2,
+                        "title": "djss",
+                        "description": "rice mayai",
+                        "price": 23,
+                        "status": "Pending",
+                        "date": "None"
+                    }
+                ]    
+            }
+        
+
+## Get all orders [/api/v2/users/orders]
+### List All Questions [GET]
+
+Gets all orders made by all the users
+
++ Response 200 (application/json)
+
+        
+            {
+                "orders": [
+                    {
+                        "id": 1,
+                        "title": "djss",
+                        "description": "uji mayai",
+                        "price": 23,
+                        "status": "Pending",
+                        "date": "None"
+                    },
+                    {
+                        "id": 2,
+                        "title": "djss",
+                        "description": "rice mayai",
+                        "price": 23,
+                        "status": "Pending",
+                        "date": "None"
+                    }
+                ]
+            }
+        
+
+## Get all meals [/api/v2/menu]
+### List All Questions [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "food_items": [
+                    {
+                        "id": 1,
+                        "title": "djss",
+                        "description": "uji mayai",
+                        "price": 23,
+                        
+                    },
+                    {
+                        "id": 2,
+                        "title": "djss",
+                        "description": "rice mayai",
+                        "price": 23,
+
+                    }
+                ]
+            }
+        ]
+
+## Update status [/api/v2/users/orders/1]
+### List All Questions [PUT]
+
+Allows admin to update the status of a specific order
+
++ Request (application/json)
+
+           {
+             
+                "name": "djss",
+                "description": "uji mayai",
+                "price": 23,
+                "status": "Pending" to "Approved",
+                
+           
+           } 
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /questions/2
+
+    + Body
+
+            {   "name": "djss",
+                "description": "uji mayai",
+                "price": 23,
+                "status": "Aprroved",
+                
+            }
+
+## Delete order [/api/v2/users/orders/1]
+### List All Questions [DELETE]
+
+Deletes a specific order
+
++ Response 200 (application/json)
+
+        [
+            {
+                "message": "order deleted successfully"
+            }
+        ]
+
+## Delete Meal item [/api/v2/menu/1]
+
+### List All Questions [DELETE]
+
+Deletes a specific meal item
+
++ Response 200 (application/json)
+
+        [
+            {
+                "message": "meal deleted successfully"
+            }
+        ]
