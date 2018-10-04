@@ -172,7 +172,7 @@ class Order(ConnectDB):
                  title=None,
                  description = None,
                  price=None,
-                 status="Pending"):
+                 status="Processing"):
         super().__init__()
         self.username = username
         self.title = title
@@ -210,7 +210,6 @@ class Order(ConnectDB):
         self.cursor.execute(''' SELECT * FROM orders WHERE username=%s''', (username, ))
 
         orders = self.cursor.fetchall()
-        print("\n\n\n####{}\n\n".format(orders))
 
         self.connection.commit()
         self.cursor.close()
@@ -231,7 +230,7 @@ class Order(ConnectDB):
 
         if orders:
             return [self.objectify(order) for order in orders]
-            # print("\n\n\n####{}\n\n".format(order))
+            
         return None 
 
     def get_all_orders(self):
@@ -246,6 +245,13 @@ class Order(ConnectDB):
         if orders:
             return [self.objectify(order) for order in orders]
         return None
+    
+    def update_status(self, status, order_id):
+        self.cursor.execute('''UPDATE orders 
+        SET status = %s WHERE id=%s''', (status, order_id))
+
+        self.connection.commit()
+        self.cursor.close()
 
     def delete(self, order_id):
         ''' Delete order '''

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import Api
+from datetime import timedelta
 from flask_jwt_extended import JWTManager
 from app.api.v1.views import Orders, GetOneOrder,AcceptOrder,DeclineOrder,CompleteOrder,Status
 from instance.config import app_config
@@ -12,6 +13,7 @@ jwt = JWTManager()
 def create_app(config_stage):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_stage])
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1000)
 
     jwt.init_app(app)
 
@@ -31,15 +33,15 @@ def create_app(config_stage):
     from .api.v1 import orders_bp as orders_blueprint
     api = Api(orders_blueprint)
     app.register_blueprint(orders_blueprint, url_prefix='/api/v1')
-
+    # app.add_resource(Home, '/')
     auth.add_resource(Signup, '/signup')
     auth.add_resource(Login, '/login')
     api.add_resource(Orders, '/orders')
-    orderly.add_resource(PostOrder, '/post')
-    orderly.add_resource(SpecificOrder, '/orderly/<int:id>')
-    orderly.add_resource(UserHistory, '/orderly/history')
-    meal.add_resource(SpecificMeal, '/meals/<int:id>')
-    meal.add_resource(Meals, '/meals')
+    orderly.add_resource(PostOrder, '/users/orders')
+    orderly.add_resource(SpecificOrder, '/users/orders/<int:id>')
+    orderly.add_resource(UserHistory, '/users/history')
+    meal.add_resource(SpecificMeal, '/menu/<int:id>')
+    meal.add_resource(Meals, '/menu')
     api.add_resource(GetOneOrder, '/orders/<int:id>')
     api.add_resource(AcceptOrder,'/orders/accept/<int:id>')
     api.add_resource(DeclineOrder,'/orders/decline/<int:id>')

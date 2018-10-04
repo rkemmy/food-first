@@ -49,7 +49,7 @@ class Meals(Resource):
                 "food_items": [meal_item.serialize() for meal_item in meal_items]
             }, 200
 
-        return {"message": "meal item not found"}
+        return {"message": "meal item not found"}, 200
 
 class SpecificMeal(Resource):
 

@@ -1,0 +1,19 @@
+[report]
+omit =
+    *instance*
+    *testdb.py*
+    *app/api/v1*
+    */python?.?/*
+    *site-packages/*
+    *site-packages/nose/*
+    *__init__*
+    *__repr__*
+    *tests/*
+    */usr/*
+    *venv*
+    *swagger_ui/*
+exclude_lines=
+    pragma: no cover
+    raise Exception()
+    except
+    repr

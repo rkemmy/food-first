@@ -16,7 +16,7 @@ class PostOrder(Resource):
         name = data['name']
 
         meal_item = MealItem().get_by_name(name)
-        print(meal_item)
+        
         if not meal_item:
             return {"message": "food item not found"}, 404
 
@@ -65,6 +65,7 @@ class SpecificOrder(Resource):
     def put(self, id):
         ''' Method that updates a specific order '''
         
+        # order = Order().get_by_id(id)
         order = Order().get_by_id(id)
         data = request.get_json(force=True)
 
@@ -73,16 +74,15 @@ class SpecificOrder(Resource):
         if not (user[1]):
             return {'message':'You cannot access this route'}, 401
 
-        elif data['status'].strip() == "":
+        elif data['status'] not in ["New", "Complete", "Processing", "Cancelled"]:
             return ({'message': 'Enter valid status input'}, 400)
-
-        else:
-            if not isinstance(data['status'], str):
-                return {'message': 'Input should be a string'}
         
         if order:
+            Order().update_status(data['status'], id)
             order.status = data['status']
             return {"message":order.serialize()},201
+        
+        print(order)
         
         return {"Message":"Order not found"},404
 
