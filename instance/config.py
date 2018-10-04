@@ -15,7 +15,7 @@ class TestConfig(Config):
     """ Testing configuration class that inherits from the Config Parent Class"""
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TEST_URL')
+    DATABASE_TEST_URL = os.getenv('DATABASE_TEST_URL')
 
 class ProductionConfig(Config):
     """ Prduction configuration class that inherits from the Config Parent Class"""
