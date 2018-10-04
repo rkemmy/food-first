@@ -1,5 +1,8 @@
 [report]
 omit =
+    *instance*
+    *testdb.py*
+    *app/api/v1*
     */python?.?/*
     *site-packages/*
     *site-packages/nose/*

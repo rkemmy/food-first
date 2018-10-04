@@ -33,7 +33,7 @@ def create_app(config_stage):
     from .api.v1 import orders_bp as orders_blueprint
     api = Api(orders_blueprint)
     app.register_blueprint(orders_blueprint, url_prefix='/api/v1')
-
+    app.add_resource(Home, '/')
     auth.add_resource(Signup, '/signup')
     auth.add_resource(Login, '/login')
     api.add_resource(Orders, '/orders')
