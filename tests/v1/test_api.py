@@ -40,7 +40,7 @@ class TestApi(unittest.TestCase):
         res = self.client.get('/api/v1/orders', content_type='application/json')
 
         self.assertEqual(res.status_code, 200 )
-        print(res)
+        
         self.assertEqual(json.loads(res.data)['Orders'], [{'description': 'spicy', 'id': 4,'name': 'ugali', 'price': 50, 'status': 'pending'}])
 
         

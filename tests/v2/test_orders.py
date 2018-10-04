@@ -1,32 +1,18 @@
-import unittest
 import json
-
+import unittest
 
 from app import create_app
-
 from testdb import CreateTables
+from .base_test import TestApp
 
-class TestApp(unittest.TestCase):
-    def setup(self):
-        """ set up test """
-
+class TestOrders(unittest.TestCase):
+    def setUp(self):
         self.app = create_app("testing")
-        self.app_client = self.app.test_client()
-        with self.app.app_context():
-            CreateTables.drop()
-            CreateTables.create_tables()
-            CreateTables.add_admin()
-        
+        self.client = self.app.test_client()
 
-        self.create_user_data = {
-            "username":"",
-            "email":"",
-            "password": ""
-        }
+    # def test_post_order(self):
         
-
-    def signup(self):
-        """ sign up method """
-        res = self.app_client.post(
-            
-        )
+    #     response = self.client.post('api/v2/users/orders',
+    #         headers = {"content-type":"application/json"}
+    #     )
+    #     self.assertEqual(response.status_code, 201)

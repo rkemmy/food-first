@@ -10,12 +10,13 @@ class Config(object):
 class DevelopmentConfig(Config):
     """ Development configuration class that inherits from the Config Parent Class"""
     DEBUG = True
-    
+    DATABASE_URL = os.getenv('DATABASE_URL')
+
 class TestConfig(Config):
     """ Testing configuration class that inherits from the Config Parent Class"""
     DEBUG = True
     TESTING = True
-    DATABASE_TEST_URL = os.getenv('DATABASE_TEST_URL')
+    DATABASE_URL = os.getenv('DATABASE_TEST_URL')
 
 class ProductionConfig(Config):
     """ Prduction configuration class that inherits from the Config Parent Class"""

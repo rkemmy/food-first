@@ -58,7 +58,6 @@ class CreateTables(ConnectDB):
             self.cursor.execute(query)
 
         self.conn.commit()
-        self.cursor.close()
 
     def drop(self):
         queries = [
@@ -77,7 +76,7 @@ class CreateTables(ConnectDB):
             self.cursor.execute(query)
 
         self.conn.commit()
-        self.cursor.close()
+        
 
     def add_admin(self):
         admin = User(username='Useradmin', email='admin@gmail.com',

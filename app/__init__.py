@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import Api
+from datetime import timedelta
 from flask_jwt_extended import JWTManager
 from app.api.v1.views import Orders, GetOneOrder,AcceptOrder,DeclineOrder,CompleteOrder,Status
 from instance.config import app_config
@@ -12,6 +13,7 @@ jwt = JWTManager()
 def create_app(config_stage):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_stage])
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1000)
 
     jwt.init_app(app)
 
