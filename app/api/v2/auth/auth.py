@@ -19,32 +19,32 @@ class Signup(Resource):
             password = data['password']
         
         except:
-            return ({'message': 'Json data is either empty or invalid'}), 200
+            return ({'message': 'Request data is missing username, email or password'}), 400
 
         if type(data['username']) != str or type(data['email']) != str or type(data['password']) != str:
-            return {'message': 'please input string data'}
+            return {'message': 'Valid username, email and password should be a str'}
 
-        elif not re.match('^[a-zA-Z0-9]{6,20}$', username):
-            return {'message':'Valid username should be alphanumeric, between 6 and 20 characters'}, 400
+        if not re.match('^[a-zA-Z]{6,20}$', username):
+            return {'message':'Valid username should be alphabetic, between 6 and 20 characters'}, 400
 
-        elif not re.match(r"^[a-z0-9@.]+@[^@]+\.[^@]+$", email):
+        if not re.match(r"^[a-z0-9@.]+@[^@]+\.[^@]+$", email):
             return {'message': 'Valid email should be alphanumeric with the @ and . symbol'}, 400
 
-        elif not re.match("^[a-zA-Z0-9$]{8,20}$", password):
-            return {'message':'Valid password should be alphanumeric, between 8 to 20 characters,'}, 400
+        if not re.match("^[a-zA-Z0-9$]{8,20}$", password):
+            return {'message':'Valid password should be alphanumeric, between 8 to 20 characters'}, 400
         
-        elif User().get_user_by_username(username):
+        if User().get_user_by_username(username):
             return {'message': 'username already in use'}, 400
         
-        elif User().get_user_by_email(email):
+        if User().get_user_by_email(email):
             return {'message': 'email already in use'}, 400
 
 
-            user = User(username, email, password)
+        user = User(username, email, password)
 
-            user.add()
+        user.add()
 
-            return {'message': 'Account created successfully'}, 201
+        return {'message': 'Account created successfully'}, 201
 
         
 
