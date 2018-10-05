@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect
 from flask_restful import Api
 from datetime import timedelta
 from flask_jwt_extended import JWTManager
@@ -16,6 +16,10 @@ def create_app(config_stage):
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1000)
 
     jwt.init_app(app)
+
+    @app.route('/')
+    def index():
+        return redirect('https://app.swaggerhub.com/apis-docs/andela59/Food-First/1.0')
 
     from app.api.v2.auth import auth_blueprint as auth_bp
     auth = Api(auth_bp)
