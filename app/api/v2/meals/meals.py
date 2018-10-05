@@ -24,23 +24,20 @@ class Meals(Resource):
         if MealItem().get_by_name(name):
             return {'message': f'meal with name {name} already exists'}, 400
 
-        if not re.match('^[a-zA-Z 0-9]+$', name):
+        if not re.match('^[a-zA-Z ]+$', name):
             return {'message': "valid food name should contain alphanumeric characters"}, 400
 
-        if not re.match('^[a-zA-Z0-9 ]+$', description):
+        if not re.match('^[a-zA-Z ]+$', description):
             return {'message': "valid food name should contain alphanumeric characters"}, 400
-        
-        if type(price) != int:
-            return {'message': "Invalid price"}, 400
 
-        if data['price'] <= 0:
-            return {'message': 'Meal has to cost money'}, 400 
+        if not isinstance(data['price'], int) or data['price'] <= 0:
+            return {'message': 'Price must be an integer greter than zero'}, 400 
 
         mealitem = MealItem(name, description, price)
 
         mealitem.add()
 
-        return {"message": "Meal successfully created"}
+        return {"message": "Meal successfully created"}, 201
 
 
     def get(self):
