@@ -18,8 +18,7 @@ class PostOrder(Resource):
         meal_item = MealItem().get_by_name(name)
         
         if not meal_item:
-            return {"message": "food item not found"}, 404
-
+            return {"message": "food item not found, please check the menu for available meals"}, 404
 
         order = Order(username=current_user[0], title=meal_item.name, description=meal_item.description,
                       price=meal_item.price)
@@ -94,7 +93,7 @@ class SpecificOrder(Resource):
 
         user = get_jwt_identity()
 
-        if not (user[1]):
+        if not user:
             return {'message':'You cannot access this route'}, 401
 
         if order:

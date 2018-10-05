@@ -19,19 +19,22 @@ class Meals(Resource):
 
         if not (user[1]):
             return {'message':'You cannot access this route'}, 401
+        
        
         if MealItem().get_by_name(name):
-            return {'message': f'meal with name {name} alredy exists'}, 400
+            return {'message': f'meal with name {name} already exists'}, 400
 
         if not re.match('^[a-zA-Z 0-9]+$', name):
-            return {'message': "Enter a valid food name"}, 400
+            return {'message': "valid food name should contain alphanumeric characters"}, 400
 
         if not re.match('^[a-zA-Z0-9 ]+$', description):
-            return {'message': "Enter a valid food description"}, 400
-
+            return {'message': "valid food name should contain alphanumeric characters"}, 400
+        
         if type(price) != int:
             return {'message': "Invalid price"}, 400
 
+        if data['price'] <= 0:
+            return {'message': 'Meal has to cost money'}, 400 
 
         mealitem = MealItem(name, description, price)
 

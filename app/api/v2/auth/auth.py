@@ -10,48 +10,65 @@ from ..models import User
 class Signup(Resource):
     def post(self):
         ''' Add a new user '''
-        data = request.get_json()
+        try:
 
-        username = data['username']
-        email = data["email"]
-        password = data['password']
+            data = request.get_json()
 
-        if not re.match('^[a-zA-Z0-9]{6,20}$', username):
-            return {'message':'Please enter a valid username'}, 400
-
-        if not re.match(r"^[^@]+@[^@]+\.[^@]+$", email):
-            return {'message': 'Invalid email'}, 400
-
-        if not re.match("^[a-zA-Z0-9$!#]{8,20}$", password):
-            return {'message':'Enter a valid password'}, 400
+            username = data['username']
+            email = data["email"]
+            password = data['password']
         
-        if User().get_user_by_username(username):
+        except:
+            return ({'message': 'Json data is either empty or invalid'}), 200
+
+        if type(data['username']) != str or type(data['email']) != str or type(data['password']) != str:
+            return {'message': 'please input string data'}
+
+        elif not re.match('^[a-zA-Z0-9]{6,20}$', username):
+            return {'message':'Valid username should be alphanumeric, between 6 and 20 characters'}, 400
+
+        elif not re.match(r"^[a-z0-9@.]+@[^@]+\.[^@]+$", email):
+            return {'message': 'Valid email should be alphanumeric with the @ and . symbol'}, 400
+
+        elif not re.match("^[a-zA-Z0-9$]{8,20}$", password):
+            return {'message':'Valid password should be alphanumeric, between 8 to 20 characters,'}, 400
+        
+        elif User().get_user_by_username(username):
             return {'message': 'username already in use'}, 400
         
-        if User().get_user_by_email(email):
+        elif User().get_user_by_email(email):
             return {'message': 'email already in use'}, 400
 
 
-        user = User(username, email, password)
+            user = User(username, email, password)
 
-        user.add()
+            user.add()
 
-        return {'message': 'Account created successfully'}, 201
+            return {'message': 'Account created successfully'}, 201
+
+        
 
 class Login(Resource):
     def post(self):
         ''' Existing user can login '''
-        data = request.get_json()
+        try:
+            data = request.get_json()
 
-        username = data['username']
-        password = data['password']
+            username = data['username']
+            password = data['password']
+
+        except:
+            return {'message': 'Json data empty or invalid'}, 200
 
         user = User().get_user_by_username(username)
 
-        if not user:
+        if type(data['username']) != str or type(data['password']) != str:
+            return {'message': 'please input string data'}
+
+        elif not user:
             return {'message': 'user not found'}, 404
 
-        if not check_password_hash(user.password, password):
+        elif not check_password_hash(user.password, password):
             return {'message': 'Wrong password'}, 400
 
         token = create_access_token(identity=(username, user.is_admin ))
