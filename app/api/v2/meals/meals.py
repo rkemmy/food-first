@@ -25,10 +25,10 @@ class Meals(Resource):
             return {'message': f'meal with name {name} already exists'}, 400
 
         if not re.match('^[a-zA-Z ]+$', name):
-            return {'message': "valid food name should contain alphanumeric characters"}, 400
+            return {'message': "valid food name should contain alphabetic characters"}, 400
 
         if not re.match('^[a-zA-Z ]+$', description):
-            return {'message': "valid description should contain alphanumeric characters"}, 400
+            return {'message': "valid description should contain alphabetic characters"}, 400
 
         if not isinstance(data['price'], int) or data['price'] <= 0:
             return {'message': 'Price must be an integer greter than zero'}, 400 
