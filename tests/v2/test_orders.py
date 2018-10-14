@@ -5,6 +5,8 @@ from app import create_app
 from testdb import CreateTables
 from .base_test import TestApp
 
+from .test_meals import TestMeals
+
 
 class TestOrders(TestApp):
     
