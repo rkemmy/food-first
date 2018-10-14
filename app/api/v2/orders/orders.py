@@ -12,7 +12,7 @@ class PostOrder(Resource):
         data = request.get_json()
 
         
-        current_user = get_jwt_identity()
+        current_user = get_jwt_identity()[0]
         name = data['name']
 
         meal_item = MealItem().get_by_name(name)
@@ -20,7 +20,7 @@ class PostOrder(Resource):
         if not meal_item:
             return {"message": "food item not found, please check the menu for available meals"}, 404
 
-        order = Order(username=current_user[0], title=meal_item.name, description=meal_item.description,
+        order = Order(username=current_user, name=meal_item.name, description=meal_item.description,
                       price=meal_item.price)
         order.add()
 
@@ -50,7 +50,7 @@ class SpecificOrder(Resource):
 
         order = Order().get_by_id(id)
 
-        user = get_jwt_identity()
+        user = get_jwt_identity() 
 
         if not (user[1]):
             return {'message':'You cannot access this route'}, 401
@@ -74,7 +74,7 @@ class SpecificOrder(Resource):
             return {'message':'You cannot access this route'}, 401
 
         elif data['status'] not in ["New", "Complete", "Processing", "Cancelled"]:
-            return ({'message': 'Enter valid status input'}, 400)
+            return ({'message': 'Status can either be: New, Complete, Processing, Cancelled'}, 400)
         
         if order:
             Order().update_status(data['status'], id)

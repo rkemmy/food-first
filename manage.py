@@ -45,11 +45,10 @@ class CreateTables(ConnectDB):
         CREATE TABLE IF NOT EXISTS orders(
             id serial PRIMARY KEY,
             username VARCHAR NOT NULL,
-            title VARCHAR NOT NULL,
+            name VARCHAR NOT NULL,
             description VARCHAR NOT NULL,
             price INT NOT NULL,
-            status VARCHAR NOT NULL,
-            order_date TIMESTAMP
+            status VARCHAR NOT NULL  
         )
         """
         ]

@@ -169,13 +169,13 @@ class Order(ConnectDB):
     def __init__(self,
                 # id = None,
                  username=None,
-                 title=None,
+                 name=None,
                  description = None,
                  price=None,
-                 status="Processing"):
+                 status="New"):
         super().__init__()
         self.username = username
-        self.title = title
+        self.name = name
         self.description = description
         self.price = price
         self.status = status
@@ -185,8 +185,8 @@ class Order(ConnectDB):
         ''' Add food order to database'''
         print(self.username)
         self.cursor.execute(
-            """ INSERT INTO orders(username, title, description, price, status) VALUES('%s','%s','%s','%s','%s')""" %
-            (self.username, self.title, self.description, self.price,self.status))
+            """ INSERT INTO orders(username, name, description, price, status) VALUES('%s','%s','%s','%s','%s')""" %
+            (self.username, self.name, self.description, self.price,self.status))
 
         self.connection.commit()
         self.cursor.close()
@@ -264,22 +264,21 @@ class Order(ConnectDB):
         ''' return object as a dictionary '''
         return dict (
             id = self.id,
-            title = self.title,
+            username = self.username,
+            name = self.name,
             description = self.description,
             price = self.price,
-            status = self.status,
-            date = self.date
+            status = self.status
         )
     
     def objectify(self, data):
         ''' map tuple to an object '''
         order = Order(
             username=data[1],
-            description=data[2],
-            title=data[3],
+            name=data[2],
+            description=data[3],
             price=data[4],
             status=data[5])
         order.id = data[0]
-        order.date = str(data[6])
         self = order
         return self
