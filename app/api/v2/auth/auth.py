@@ -74,5 +74,6 @@ class Login(Resource):
         token = create_access_token(identity=(username, user.is_admin ))
         return {
             'token': token,
-            'message': f'You were successfully logged in {username}'
+            'message': f'You were successfully logged in {username}',
+            'admin': user.is_admin
         }, 200
