@@ -2,6 +2,7 @@ from flask import Flask, redirect
 from flask_restful import Api
 from datetime import timedelta
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from app.api.v1.views import Orders, GetOneOrder,AcceptOrder,DeclineOrder,CompleteOrder,Status
 from instance.config import app_config
 from app.api.v2.auth import Signup, Login
@@ -16,6 +17,7 @@ def create_app(config_stage):
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1000)
 
     jwt.init_app(app)
+    CORS(app)
 
     @app.route('/')
     def index():
