@@ -37,7 +37,8 @@ class CreateTables(ConnectDB):
             id serial PRIMARY KEY,
             name VARCHAR NOT NULL,
             description VARCHAR NOT NULL , 
-            price INT NOT NULL
+            price INT NOT NULL,
+            img VARCHAR NOT NULL
             
         )
         """,
@@ -48,7 +49,8 @@ class CreateTables(ConnectDB):
             name VARCHAR NOT NULL,
             description VARCHAR NOT NULL,
             price INT NOT NULL,
-            status VARCHAR NOT NULL  
+            status VARCHAR NOT NULL ,
+            quantity INT NOT NULL 
         )
         """
         ]

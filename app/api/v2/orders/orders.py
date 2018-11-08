@@ -14,6 +14,7 @@ class PostOrder(Resource):
         
         current_user = get_jwt_identity()[0]
         name = data['name']
+        quantity = data['quantity']
 
         meal_item = MealItem().get_by_name(name)
         
@@ -21,7 +22,7 @@ class PostOrder(Resource):
             return {"message": "food item not found, please check the menu for available meals"}, 404
 
         order = Order(username=current_user, name=meal_item.name, description=meal_item.description,
-                      price=meal_item.price)
+                      price=meal_item.price, quantity=quantity)
         order.add()
 
         return {"message": "order placed sucessfully"}, 201

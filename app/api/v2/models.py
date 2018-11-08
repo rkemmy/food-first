@@ -84,18 +84,19 @@ class User(ConnectDB):
         return self  
 
 class MealItem(ConnectDB):
-    def __init__(self, name=None, description=None, price=None):
+    def __init__(self, name=None, description=None, price=None, img=None):
         super().__init__()
         self.id = id
         self.name = name
         self.description = description
         self.price = price
+        self.img = img
 
     def add(self):
         ''' Add meal item to meals table'''
         self.cursor.execute(
-            ''' INSERT INTO meals(name, description, price) VALUES(%s, %s, %s)''',
-            (self.name, self.description, self.price))
+            ''' INSERT INTO meals(name, description, price, img) VALUES(%s, %s, %s, %s)''',
+            (self.name, self.description, self.price, self.img))
 
         self.connection.commit()
         self.cursor.close()
@@ -142,6 +143,13 @@ class MealItem(ConnectDB):
             return [self.objectify(meal) for meal in meals]
         return None
 
+    def update_meal(self, name, description, img, price, meal_id):
+        self.cursor.execute('''UPDATE meal
+        SET name, description, img, price = %s,%s,%s,%s WHERE id=%s''', (name, description, img, price, meal_id))
+
+        self.connection.commit()
+        self.cursor.close()
+
     def delete(self, order_id):
         ''' Delete order '''
         self.cursor.execute(''' DELETE FROM meals WHERE id=%s''',
@@ -155,16 +163,30 @@ class MealItem(ConnectDB):
             id = self.id,
             name = self.name,
             description = self.description,
-            price = self.price
+            price = self.price,
+            img = self.img
         )
 
     def objectify(self, data):
         ''' map tuple to an object '''
-        item = MealItem(name=data[1], description=data[2], price=data[3])
+        item = MealItem(name=data[1], description=data[2], price=data[3], img=data[4])
         item.id = data[0]
         self = item
         return self
-        
+
+    def search(self, param):
+        """Search for meal items."""
+        self.cursor.execute(''' SELECT name FROM meals WHERE name ilike %s ''', ('%' + param + '%', ))
+        meal_items = self.cursor.fetchall()
+        self.connection.commit()
+        self.cursor.close()
+
+        if meal_items:
+            return [self.objectify(meal) for meal in meal_items]
+            print("*" * 50)
+            print("meal", meal_items)
+        return None
+ 
 class Order(ConnectDB):
     def __init__(self,
                 # id = None,
@@ -172,21 +194,23 @@ class Order(ConnectDB):
                  name=None,
                  description = None,
                  price=None,
-                 status="New"):
+                 status="New",
+                 quantity = 1):
         super().__init__()
         self.username = username
         self.name = name
         self.description = description
         self.price = price
         self.status = status
+        self.quantity = quantity
         
 
     def add(self):
         ''' Add food order to database'''
         print(self.username)
         self.cursor.execute(
-            """ INSERT INTO orders(username, name, description, price, status) VALUES('%s','%s','%s','%s','%s')""" %
-            (self.username, self.name, self.description, self.price,self.status))
+            """ INSERT INTO orders(username, name, description, price, status, quantity) VALUES('%s','%s','%s','%s','%s','%s')""" %
+            (self.username, self.name, self.description, self.price,self.status, self.quantity))
 
         self.connection.commit()
         self.cursor.close()
@@ -235,7 +259,7 @@ class Order(ConnectDB):
 
     def get_all_orders(self):
         '''  Get all food orders '''
-        self.cursor.execute(''' SELECT * FROM orders''')
+        self.cursor.execute(''' SELECT * FROM orders ORDER BY id''')
 
         orders = self.cursor.fetchall()
 
@@ -267,7 +291,8 @@ class Order(ConnectDB):
             username = self.username,
             name = self.name,
             description = self.description,
-            price = self.price,
+            quantity = self.quantity,
+            price = self.price * self.quantity,
             status = self.status
         )
     
@@ -278,7 +303,8 @@ class Order(ConnectDB):
             name=data[2],
             description=data[3],
             price=data[4],
-            status=data[5])
+            status=data[5],
+            quantity=data[6])
         order.id = data[0]
         self = order
         return self

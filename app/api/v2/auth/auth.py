@@ -14,18 +14,22 @@ class Signup(Resource):
 
             data = request.get_json()
 
-            username = data['username']
-            email = data["email"]
+            username = (data['username']).lower()
+            email = (data["email"]).lower()
             password = data['password']
+            confirm_password = data['confirm_password']
         
-        except:
-            return ({'message': 'Request data is missing username, email or password'}), 400
+        except Exception as e:
+            return ({'message': str(e)}), 400
 
         if type(data['username']) != str or type(data['email']) != str or type(data['password']) != str:
             return {'message': 'Valid username, email and password should be a str'}
 
         if not re.match('^[a-zA-Z]{6,20}$', username):
             return {'message':'Valid username should be alphabetic, between 6 and 20 characters'}, 400
+
+        if password != confirm_password:
+            return {'message': 'Passwords do not match'}, 400
 
         if not re.match(r"^[a-z0-9@.]+@[^@]+\.[^@]+$", email):
             return {'message': 'Valid email should be alphanumeric with the @ and . symbol'}, 400
